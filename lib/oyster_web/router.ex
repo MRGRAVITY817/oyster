@@ -14,10 +14,12 @@ defmodule OysterWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", OysterWeb do
+  live_session :default, on_mount: [{OysterWeb.SaveRequestUri, :save_request_uri}] do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live("/", OysterWeb.Pages)
+    live("/docs", OysterWeb.Pages.Docs)
+    live("/docs/components/avatar", OysterWeb.Pages.Docs.Components.Avatar)
   end
 
   # Other scopes may use custom stacks.
@@ -35,8 +37,6 @@ defmodule OysterWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
-
       live_dashboard "/dashboard", metrics: OysterWeb.Telemetry
     end
   end
